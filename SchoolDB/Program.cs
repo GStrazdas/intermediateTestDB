@@ -129,5 +129,4 @@ Console.WriteLine("/*********************   Sestas - Astuntas punktai  *********
 Services.PrintDepartmentsStudents("NewDepartment");
 Services.PrintDepartmentsLessons("ExistingDeparment1");
 
-
 Console.WriteLine("Finished");
