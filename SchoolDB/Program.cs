@@ -39,6 +39,8 @@ Services.AddItem<Student>(new List<string>
  ****************************/
 using (var schoolContext = new SchoolContext())
 {
+    
+    
     var addDepartment = new Department()
     {
         Name = "NewDepartment",
@@ -46,24 +48,22 @@ using (var schoolContext = new SchoolContext())
         {
             new Lesson() { Name = "NewLesson"},
             new Lesson() { Name = "NewLesson1"},
-            new Lesson(){ Name ="NewLesson2"}
+            new Lesson(){ Name ="NewLesson2"},
+            schoolContext.Lessons.FirstOrDefault(l => l.Name == "ExistingLesson1")
         },
         Student = new List<Student>()
         {
             new Student() { Name = "NewStudent"},
             new Student() { Name = "NewStudent1"},
             new Student() { Name = "NewStudent2"},
+            schoolContext.Students.FirstOrDefault(s => s.Name == "ExistingStudent2")
         }
     };
 
-    var addExistingLesson1 = schoolContext.Lessons.FirstOrDefault(l => l.Name == "ExistingLesson1");
     var addExistingLesson2 = schoolContext.Lessons.FirstOrDefault(l => l.Name == "ExistingLesson2");
-    var addExistingStudent2 = schoolContext.Students.FirstOrDefault(s => s.Name == "ExistingStudent2");
     var addExistingStudent3 = schoolContext.Students.FirstOrDefault(s => s.Name == "ExistingStudent3");
 
-    addDepartment.Lesson.Add(addExistingLesson1);
     addDepartment.Lesson.Add(addExistingLesson2);
-    addDepartment.Student.Add(addExistingStudent2);
     addDepartment.Student.Add(addExistingStudent3);
 
     schoolContext.Departments.Add(addDepartment);
@@ -84,39 +84,47 @@ using (var schoolContext = new SchoolContext())
 using (var schoolContext = new SchoolContext())
 {
     var updateDepartment = schoolContext.Departments.FirstOrDefault(d => d.Name == "ExistingDeparment1");
-    var addExistingLesson = schoolContext.Lessons.FirstOrDefault(l => l.Name == "ExistingLesson");
-    var addExistingLesson2 = schoolContext.Lessons.FirstOrDefault(l => l.Name == "ExistingLesson2");
-    var addExistingLesson3 = schoolContext.Lessons.FirstOrDefault(l => l.Name == "ExistingLesson3");
-    var addNewLesson3 = new Lesson() { Name = "NewLesson3" };
-    var addExistingStudent = schoolContext.Students.FirstOrDefault(s => s.Name == "ExistingStudent");
-    var addExistingStudent2 = schoolContext.Students.FirstOrDefault(s => s.Name == "ExistingStudent2");
+    var addExistingLesson = schoolContext.Lessons.FirstOrDefault(l => l.Name == "ExistingLesson");          // 2. Pridėti studentus/paskaitas į jau egzistuojantį departamentą.
+    var addExistingLesson2 = schoolContext.Lessons.FirstOrDefault(l => l.Name == "ExistingLesson2");        // 2. Pridėti studentus/paskaitas į jau egzistuojantį departamentą.
+    var addExistingLesson3 = schoolContext.Lessons.FirstOrDefault(l => l.Name == "ExistingLesson3");        // 2. Pridėti studentus/paskaitas į jau egzistuojantį departamentą.
+    var addNewLesson3 = new Lesson() { Name = "NewLesson3" };                                               // 3. Sukurti paskaitą ir ją priskirti prie departamento.
+    var addExistingStudent = schoolContext.Students.FirstOrDefault(s => s.Name == "ExistingStudent");       // 2. Pridėti studentus/paskaitas į jau egzistuojantį departamentą.
+    var addExistingStudent2 = schoolContext.Students.FirstOrDefault(s => s.Name == "ExistingStudent2");     // 5. Perkelti studentą į kitą departamentą(bonus points jei pakeičiamos ir jo paskaitos). Studentas buvo pirmame punkte priskirtas NewDepartment departamentui
     var addNewStudent3 = new Student() { Name = "NewStudent3" };
 
     Console.WriteLine("/*********************   Antras - Penktas punktai  ******************************/");
     Console.WriteLine("Before:");
+    Console.WriteLine("-----------------------------------------------");
     Console.WriteLine("Departments students");
     Services.PrintDepartmentsStudents(null);
+    Console.WriteLine("-----------------------------------------------");
     Console.WriteLine("Departments lessons");
     Services.PrintDepartmentsLessons(null);
+    Console.WriteLine("-----------------------------------------------");
+    Services.PrintStudentLessons("ExistingStudent2");
 
-    updateDepartment.Lesson.Add(addExistingLesson);
-    updateDepartment.Lesson.Add(addExistingLesson2);
-    updateDepartment.Lesson.Add(addExistingLesson3);
-    updateDepartment.Lesson.Add(addNewLesson3);
-    updateDepartment.Lesson.Add(new Lesson() { Name = "NewLesson4" });
-    updateDepartment.Student.Add(addExistingStudent);
-    updateDepartment.Student.Add(addExistingStudent2);
-    updateDepartment.Student.Add(addNewStudent3);
-    updateDepartment.Student.Add(new Student() { Name = "NewStudent4" });
+    updateDepartment.Lesson.Add(addExistingLesson);                         // 2. Pridėti studentus/paskaitas į jau egzistuojantį departamentą.
+    updateDepartment.Lesson.Add(addExistingLesson2);                        // 2. Pridėti studentus/paskaitas į jau egzistuojantį departamentą.
+    updateDepartment.Lesson.Add(addExistingLesson3);                        // 2. Pridėti studentus/paskaitas į jau egzistuojantį departamentą.
+    updateDepartment.Lesson.Add(addNewLesson3);                             // 3. Sukurti paskaitą ir ją priskirti prie departamento.
+    updateDepartment.Lesson.Add(new Lesson() { Name = "NewLesson4" });      // 3. Sukurti paskaitą ir ją priskirti prie departamento.
+    updateDepartment.Student.Add(addExistingStudent);                       // 2. Pridėti studentus/paskaitas į jau egzistuojantį departamentą.
+    updateDepartment.Student.Add(addExistingStudent2);                      // 5. Perkelti studentą į kitą departamentą(bonus points jei pakeičiamos ir jo paskaitos). Studentas buvo pirmame punkte priskirtas NewDepartment departamentui
+    updateDepartment.Student.Add(addNewStudent3);                           // 4. Sukurti studentą, jį pridėti prie egzistuojančio departamento ir priskirti jam egzistuojančias paskaitas.
+    updateDepartment.Student.Add(new Student() { Name = "NewStudent4" });   // 4. Sukurti studentą, jį pridėti prie egzistuojančio departamento ir priskirti jam egzistuojančias paskaitas.
 
     schoolContext.Departments.Update(updateDepartment);
     schoolContext.SaveChanges();
 
     Console.WriteLine("After");
-    Console.WriteLine("Departments students before");
+    Console.WriteLine("-----------------------------------------------");
+    Console.WriteLine("Departments students");
     Services.PrintDepartmentsStudents(null);
-    Console.WriteLine("Departments lessons before");
+    Console.WriteLine("-----------------------------------------------");
+    Console.WriteLine("Departments lessons");
     Services.PrintDepartmentsLessons(null);
+    Console.WriteLine("-----------------------------------------------");
+    Services.PrintStudentLessons("ExistingStudent2");
 }
 
 /****************************************
@@ -126,7 +134,16 @@ using (var schoolContext = new SchoolContext())
  ****************************************/
 
 Console.WriteLine("/*********************   Sestas - Astuntas punktai  ******************************/");
-Services.PrintDepartmentsStudents("NewDepartment");
-Services.PrintDepartmentsLessons("ExistingDeparment1");
+Services.PrintDepartmentsStudents("NewDepartment");     // 6. Atvaizduoti visus departamento studentus.
+Services.PrintDepartmentsLessons("ExistingDeparment1"); // 7. Atvaizduoti visas departamento paskaitas.
+try
+{
+    Services.PrintStudentLessons("NewStudent1");        // 8. Atvaizduoti visas paskaitas pagal studentą.
+}
+catch (Exception ex)
+{
+    Console.WriteLine(ex.Message);
+}
+
 
 Console.WriteLine("Finished");

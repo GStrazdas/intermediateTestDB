@@ -67,7 +67,7 @@ namespace SchoolDB
                 switch (typeof(T).Name)
                 {
                     case "Department":
-                        if(schoolContext.Departments.Where(d => d.Name == item).Count() > 0)
+                        if (schoolContext.Departments.Where(d => d.Name == item).Count() > 0)
                         {
                             return true;
                         }
@@ -127,7 +127,9 @@ namespace SchoolDB
         {
             using (var schoolContext = new SchoolContext())
             {
-                var departmentsStudents = schoolContext.Departments.Where(d => departmentsName != null ? d.Name == departmentsName : true).Include(d => d.Student);
+                var departmentsStudents = schoolContext.Departments
+                    .Where(d => departmentsName != null ? d.Name == departmentsName : true)
+                    .Include(d => d.Student);
                 foreach (var department in departmentsStudents)
                 {
                     Console.WriteLine($"{department.Name} departments students:");
@@ -147,12 +149,42 @@ namespace SchoolDB
         {
             using (var schoolContext = new SchoolContext())
             {
-                var departmentsLessons = schoolContext.Departments.Where(d => departmentsName != null ? d.Name == departmentsName : true).Include(d => d.Lesson);
+                var departmentsLessons = schoolContext.Departments
+                    .Where(d => departmentsName != null && departmentsName != "" ? d.Name == departmentsName : true)
+                    .Include(d => d.Lesson);
                 foreach (var department in departmentsLessons)
                 {
                     Console.WriteLine($"{department.Name} departments lessons:");
                     var lessonsList = department.Lesson;
                     foreach (var lesson in lessonsList)
+                    {
+                        Console.WriteLine($"\t{lesson.Name}");
+                    }
+                }
+            }
+        }
+        /// <summary>
+        /// Print a list of student's lessons, to the standard output stream.
+        /// </summary>    
+        /// <param name="departmentsName"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static void PrintStudentLessons(string studentName)
+        {
+            if(studentName == null)
+            {
+                throw new ArgumentNullException(nameof(studentName));
+            }
+            using (var schoolContext = new SchoolContext())
+            {
+                var studentsDepartment = schoolContext.Departments
+                    .Include(d => d.Lesson)
+                    .Include(d => d.Student)
+                    .Where(d => d.Student.Any(s => s.Name == studentName))
+                    .FirstOrDefault();
+                Console.WriteLine($"Sudent's {studentName} lessons:");
+                if(studentsDepartment != null)
+                {
+                    foreach (var lesson in studentsDepartment.Lesson)
                     {
                         Console.WriteLine($"\t{lesson.Name}");
                     }
