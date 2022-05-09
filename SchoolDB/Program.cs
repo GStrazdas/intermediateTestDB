@@ -134,16 +134,7 @@ using (var schoolContext = new SchoolContext())
  ****************************************/
 
 Console.WriteLine("/*********************   Sestas - Astuntas punktai  ******************************/");
-Services.PrintDepartmentsStudents("NewDepartment");     // 6. Atvaizduoti visus departamento studentus.
-Services.PrintDepartmentsLessons("ExistingDeparment1"); // 7. Atvaizduoti visas departamento paskaitas.
-try
-{
-    Services.PrintStudentLessons("NewStudent1");        // 8. Atvaizduoti visas paskaitas pagal studentą.
-}
-catch (Exception ex)
-{
-    Console.WriteLine(ex.Message);
-}
-
+Services.PrintDepartmentsStudents("NewDepartment");
+Services.PrintDepartmentsLessons("ExistingDeparment1");
 
 Console.WriteLine("Finished");
